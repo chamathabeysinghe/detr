@@ -8,6 +8,7 @@ import cv2
 import sys
 import argparse
 from pathlib import Path
+
 from typing import Iterable
 from PIL import Image
 import numpy as np
@@ -218,6 +219,7 @@ def infer(images_path, model, postprocessors, device, output_path):
 
 
 if __name__ == "__main__":
+    print('Inside the main...')
     parser = argparse.ArgumentParser('DETR training and evaluation script', parents=[get_args_parser()])
     args = parser.parse_args()
     if args.output_dir:
@@ -229,6 +231,7 @@ if __name__ == "__main__":
     if args.resume:
         checkpoint = torch.load(args.resume, map_location='cpu')
         model.load_state_dict(checkpoint['model'])
+    print('Starting to test....')
     model.to(device)
     image_paths = get_images(args.data_path)
 
