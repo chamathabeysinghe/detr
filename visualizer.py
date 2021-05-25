@@ -205,11 +205,11 @@ def infer(images_path, model, postprocessors, device, output_path):
             bbox = bbox.reshape((4, 2))
             cv2.polylines(img, [bbox], True, (0, 255, 0), 2)
 
-        # img_save_path = os.path.join(output_path, filename)
-        # cv2.imwrite(img_save_path, img)
-        img = cv2.resize(img, (int(2048/1.5), int(1084/1.5)))
-        cv2.imshow("img", img)
-        cv2.waitKey()
+        img_save_path = os.path.join(output_path, filename)
+        cv2.imwrite(img_save_path, img)
+        # img = cv2.resize(img, (int(2048/1.5), int(1084/1.5)))
+        # cv2.imshow("img", img)
+        # cv2.waitKey()
         infer_time = end_t - start_t
         duration += infer_time
         print("Processing...{} ({:.3f}s)".format(filename, infer_time))
@@ -234,6 +234,6 @@ if __name__ == "__main__":
     print('Starting to test....')
     model.to(device)
     image_paths = get_images(args.data_path)
-
+    os.makedirs(args.output_dir, exist_ok=True)
     infer(image_paths, model, postprocessors, device, args.output_dir)
 
