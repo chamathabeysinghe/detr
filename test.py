@@ -123,7 +123,7 @@ def get_args_parser():
                         help='device to use for training / testing')
     parser.add_argument('--resume', default='', help='resume from checkpoint')
 
-    parser.add_argument('--thresh', default=0.00000005, type=float)
+    parser.add_argument('--thresh', default=0.5, type=float)
 
     return parser
 
@@ -173,7 +173,7 @@ def infer(images_path, model, postprocessors, device, output_path):
 
         probas = outputs['pred_logits'].softmax(-1)[0, :, :-1]
         # keep = probas.max(-1).values > 0.85
-        keep = probas.max(-1).values > 0#args.thresh
+        keep = probas.max(-1).values > args.thresh
 
         bboxes_scaled = rescale_bboxes(outputs['pred_boxes'][0, keep], orig_image.size)
         probas = probas[keep].cpu().data.numpy()
