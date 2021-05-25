@@ -13,16 +13,20 @@ def write_file(vid_frames, file_name):
         out.write(vid_frames[i].astype(np.uint8))
     out.release()
 
+# /home/cabe0006/mb20_scratch/chamath/detr/venv_detr/bin/python -m torch.distributed.launch --nproc_per_node=1 --use_env visualizer.py --dataset_file ant --data_path /home/cabe0006/mb20_scratch/chamath/detr/dataset/test/ --output_dir /home/cabe0006/mb20_scratch/chamath/detr/eval_output/test --resume /home/cabe0006/mb20_scratch/chamath/detr/output/checkpoint.pth
 
-IMG_PATH = '/Users/cabe0006/Projects/monash/Datasets/eval_output'
-OUTPUT_PATH = '/Users/cabe0006/Projects/monash/Datasets/vid_output'
-track_first_n_frames = 5
-vid_indexes = [2, 3]
+IMG_PATH = '/home/cabe0006/mb20_scratch/chamath/detr/eval_output/train'
+OUTPUT_PATH = '/home/cabe0006/mb20_scratch/chamath/detr/video_output'
+track_first_n_frames = 500
+vid_indexes = [1, 4, 8, 9, 10, 11, 12, 13, 14]
+
+os.makedirs(OUTPUT_PATH, exist_ok=True)
 
 for v in vid_indexes:
     print('Video index: {}'.format(v))
     vid_frames = []
     for i in range(track_first_n_frames):
+        print(i)
         img_id = v * track_first_n_frames + i
         img = cv2.imread(os.path.join(IMG_PATH, '{}.jpg'.format(img_id)))
         vid_frames.append(img)
