@@ -19,11 +19,11 @@ from models import build_model
 
 def get_args_parser():
     parser = argparse.ArgumentParser('Set transformer detector', add_help=False)
-    parser.add_argument('--lr', default=1e-4, type=float)
+    parser.add_argument('--lr', default=1e-7, type=float)
     parser.add_argument('--lr_backbone', default=1e-5, type=float)
     parser.add_argument('--batch_size', default=2, type=int)
     parser.add_argument('--weight_decay', default=1e-4, type=float)
-    parser.add_argument('--epochs', default=301, type=int)
+    parser.add_argument('--epochs', default=501, type=int)
     parser.add_argument('--lr_drop', default=200, type=int)
     parser.add_argument('--clip_max_norm', default=0.1, type=float,
                         help='gradient clipping max norm')
@@ -121,11 +121,11 @@ def main(args):
     model, criterion, postprocessors = build_model(args)
     model.to(device)
 
-    for n,p in model.named_parameters():
-        if "backbone" in n:
-            p.requires_grad_(False)
-        if "encoder" in n:
-            p.requires_grad_(False)
+    # for n,p in model.named_parameters():
+    #     if "backbone" in n:
+    #         p.requires_grad_(False)
+        # if "encoder" in n:
+        #     p.requires_grad_(False)
 
     model_without_ddp = model
     if args.distributed:
@@ -181,8 +181,8 @@ def main(args):
                 args.resume, map_location='cpu', check_hash=True)
         else:
             checkpoint = torch.load(args.resume, map_location='cpu')
-        del checkpoint['model']['class_embed.weight']
-        del checkpoint['model']['class_embed.bias']
+        # del checkpoint['model']['class_embed.weight']
+        # del checkpoint['model']['class_embed.bias']
         # del checkpoint['model']['query_embed.weight']
         model_without_ddp.load_state_dict(checkpoint['model'], strict=False)
         if not args.eval and 'optimizer' in checkpoint and 'lr_scheduler' in checkpoint and 'epoch' in checkpoint:
