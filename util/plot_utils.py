@@ -58,7 +58,7 @@ def plot_logs(logs, fields=('class_error', 'loss_bbox_unscaled', 'mAP'), ewm_col
         for j, field in enumerate(fields):
             if field == 'mAP':
                 coco_eval = pd.DataFrame(
-                    np.stack(df.test_coco_eval_bbox.dropna().values)[:, 1]
+                    np.stack(df.test_coco_eval_bbox.dropna().values)[:, 0]
                 ).ewm(com=ewm_col).mean()
                 axs[j].plot(coco_eval, c=color)
             else:
@@ -105,3 +105,12 @@ def plot_precision_recall(files, naming_scheme='iter'):
     axs[1].set_title('Scores / Recall')
     axs[1].legend(names)
     return fig, axs
+
+
+# path = [Path('/Users/cabe0006/Projects/monash/detr/output_server/output_4/')]
+# # fields = ('class_error', 'loss_bbox_unscaled', 'loss_giou_unscaled', 'loss', 'loss_ce', 'mAP')
+# # plot.plot_logs(path, fields=fields)
+#
+#
+# fields = ('loss','mAP')
+# plot_logs(path, fields=fields)

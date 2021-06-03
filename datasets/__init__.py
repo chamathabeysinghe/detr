@@ -4,6 +4,7 @@ import torchvision
 
 from .coco import build as build_coco
 from .ant import build as build_ant
+from .ant2 import build as build_ant2
 
 def get_coco_api_from_dataset(dataset):
     for _ in range(10):
@@ -20,6 +21,8 @@ def build_dataset(image_set, args):
         return build_coco(image_set, args)
     if args.dataset_file == 'ant':
         return build_ant(image_set, args)
+    if args.dataset_file == 'ant2':
+        return build_ant2(image_set, args)
     if args.dataset_file == 'coco_panoptic':
         # to avoid making panopticapi required for coco
         from .coco_panoptic import build as build_coco_panoptic

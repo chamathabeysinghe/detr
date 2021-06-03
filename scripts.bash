@@ -1,6 +1,7 @@
 ## Local Development Environment
 
 python main.py --device cpu --num_workers 0 --dataset_file ant --data_path /Users/cabe0006/Projects/monash/Datasets/dataset-small/ --output_dir /Users/cabe0006/Projects/monash/detr/output/output_5 --resume /Users/cabe0006/Projects/monash/detr/checkpoints/detr-r50-e632da11.pth
+python main.py --device cpu --num_workers 0 --dataset_file ant --data_path /Users/cabe0006/Projects/monash/Datasets/dataset-small/ --output_dir /Users/cabe0006/Projects/monash/detr/output/output_5 --resume /Users/cabe0006/Projects/monash/detr/output/output_5/checkpoint.pth --eval
 
 python test.py --device cpu --dataset_file ant --data_path /Users/cabe0006/Projects/monash/Datasets/eval --output_dir /Users/cabe0006/Projects/monash/detr/output/output_3 --resume /Users/cabe0006/Projects/monash/detr/output/output_3/checkpoint.pth
 
