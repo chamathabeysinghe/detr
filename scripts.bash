@@ -14,6 +14,11 @@ python visualizer.py --device cpu --dataset_file ant --data_path /Users/cabe0006
 # Start training
 /home/cabe0006/mb20_scratch/chamath/detr/venv_detr/bin/python -m torch.distributed.launch --nproc_per_node=1 --use_env main.py --dataset_file ant --data_path /home/cabe0006/mb20_scratch/chamath/detr/dataset/ --output_dir /home/cabe0006/mb20_scratch/chamath/detr/output_backbone_freeze --resume /home/cabe0006/mb20_scratch/chamath/detr/output_backbone_freeze/checkpoint.pth
 /home/cabe0006/mb20_scratch/chamath/detr/venv_detr/bin/python -m torch.distributed.launch --nproc_per_node=1 --use_env main.py --dataset_file ant --data_path /home/cabe0006/mb20_scratch/chamath/detr/dataset/ --output_dir /home/cabe0006/mb20_scratch/chamath/detr/output_backbone_freeze --eval --resume /home/cabe0006/mb20_scratch/chamath/detr/output_backbone_freeze/checkpoint.pth
+# Train with Albumtation for image augmentations
+/home/cabe0006/mb20_scratch/chamath/detr/venv_detr/bin/python -m torch.distributed.launch --nproc_per_node=1 --use_env main.py --dataset_file ant2 --data_path /home/cabe0006/mb20_scratch/chamath/detr/dataset/ --output_dir /home/cabe0006/mb20_scratch/chamath/detr/output_new_augmentations --resume /home/cabe0006/mb20_scratch/chamath/detr/output_new_augmentations/checkpoint.pth
+
+
+
 
 # Resume training
 /home/cabe0006/mb20_scratch/chamath/detr/venv_detr/bin/python -m torch.distributed.launch --nproc_per_node=1 --use_env main.py --dataset_file ant --data_path /home/cabe0006/mb20_scratch/chamath/detr/dataset/ --output_dir /home/cabe0006/mb20_scratch/chamath/detr/output --resume /home/cabe0006/mb20_scratch/chamath/detr/output/checkpoint.pth
