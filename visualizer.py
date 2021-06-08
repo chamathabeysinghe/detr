@@ -12,7 +12,7 @@ from pathlib import Path
 from typing import Iterable
 from PIL import Image
 import numpy as np
-
+import pandas as pd
 import torch
 
 import util.misc as utils
@@ -132,6 +132,7 @@ def get_args_parser():
 def infer(images_path, model, postprocessors, device, output_path):
     model.eval()
     duration = 0
+    results_data = []
     for img_sample in images_path:
         filename = os.path.basename(img_sample)
         print("processing...{}".format(filename))
@@ -193,6 +194,7 @@ def infer(images_path, model, postprocessors, device, output_path):
 
         img = np.array(orig_image)
         img = cv2.cvtColor(img, cv2.COLOR_BGR2RGB)
+        img_id = filename.split('.')[0]
         for idx, box in enumerate(bboxes_scaled):
             bbox = box.cpu().data.numpy()
             bbox = bbox.astype(np.int32)
@@ -204,6 +206,7 @@ def infer(images_path, model, postprocessors, device, output_path):
                 ])
             bbox = bbox.reshape((4, 2))
             cv2.polylines(img, [bbox], True, (0, 255, 0), 2)
+            results_data.append([img_id, bbox[0], bbox[1], bbox[2] - bbox[0], bbox[3] - bbox[1]])
 
         img_save_path = os.path.join(output_path, filename)
         cv2.imwrite(img_save_path, img)
@@ -216,7 +219,7 @@ def infer(images_path, model, postprocessors, device, output_path):
 
     avg_duration = duration / len(images_path)
     print("Avg. Time: {:.3f}s".format(avg_duration))
-
+    return results_data
 
 if __name__ == "__main__":
     print('Inside the main...')
@@ -235,5 +238,6 @@ if __name__ == "__main__":
     model.to(device)
     image_paths = get_images(args.data_path)
     os.makedirs(args.output_dir, exist_ok=True)
-    infer(image_paths, model, postprocessors, device, args.output_dir)
-
+    data = infer(image_paths, model, postprocessors, device, args.output_dir)
+    df = pd.DataFrame(data, columns=['image_id', 'x', 'y', 'w', 'h'], index=False)
+    df.to_csv(args.output_dir + '.csv')
