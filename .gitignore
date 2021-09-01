@@ -19,3 +19,4 @@ not_tracked_dir/
 output
 output_server
 scripts.bash
+checkpoints
