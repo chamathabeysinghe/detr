@@ -157,7 +157,7 @@ class ConvertAntPolysToMask(object):
 def get_train_transforms_albm():
     return A.Compose(
         [
-            A.RandomSizedCrop(min_max_height=(800, 800), height=1024, width=1024, p=0.5),
+            A.RandomSizedCrop(min_max_height=(271, 542), height=542, width=1024, p=0.5),
             A.OneOf([
                 A.HueSaturationValue(hue_shift_limit=0.2, sat_shift_limit=0.2,
                                      val_shift_limit=0.2, p=0.9),
@@ -232,7 +232,7 @@ def build(image_set, args):
     mode = 'instances'
     PATHS = {
         "train": (root / "train", root / 'ground-truth-train.json'),
-        "val": (root / "test", root / 'ground-truth-test.json'),
+        "val": (root / "val", root / 'ground-truth-val.json'),
     }
 
     img_folder, ann_file = PATHS[image_set]
