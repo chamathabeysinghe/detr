@@ -17,23 +17,21 @@ from torch import nn, Tensor
 
 class Transformer(nn.Module):
 
-    def __init__(self, d_model=512, nhead=8, num_encoder_layers=6,
-                 num_decoder_layers=6, dim_feedforward=2048, dropout=0.1,
-                 activation="relu", normalize_before=False,
-                 return_intermediate_dec=False):
+    def __init__(self, encoder, decoder, d_model=512, nhead=8):
         super().__init__()
 
-        encoder_layer = TransformerEncoderLayer(d_model, nhead, dim_feedforward,
-                                                dropout, activation, normalize_before)
-        encoder_norm = nn.LayerNorm(d_model) if normalize_before else None
-        self.encoder = TransformerEncoder(encoder_layer, num_encoder_layers, encoder_norm)
-
-        decoder_layer = TransformerDecoderLayer(d_model, nhead, dim_feedforward,
-                                                dropout, activation, normalize_before)
-        decoder_norm = nn.LayerNorm(d_model)
-        self.decoder = TransformerDecoder(decoder_layer, num_decoder_layers, decoder_norm,
-                                          return_intermediate=return_intermediate_dec)
-
+        # encoder_layer = TransformerEncoderLayer(d_model, nhead, dim_feedforward,
+        #                                         dropout, activation, normalize_before)
+        # encoder_norm = nn.LayerNorm(d_model) if normalize_before else None
+        # self.encoder = TransformerEncoder(encoder_layer, num_encoder_layers, encoder_norm)
+        #
+        # decoder_layer = TransformerDecoderLayer(d_model, nhead, dim_feedforward,
+        #                                         dropout, activation, normalize_before)
+        # decoder_norm = nn.LayerNorm(d_model)
+        # self.decoder = TransformerDecoder(decoder_layer, num_decoder_layers, decoder_norm,
+        #                                   return_intermediate=return_intermediate_dec)
+        self.encoder = encoder
+        self.decoder = decoder
         self._reset_parameters()
 
         self.d_model = d_model
@@ -274,16 +272,36 @@ def _get_clones(module, N):
 
 
 def build_transformer(args):
-    return Transformer(
+
+    d_model = args.hidden_dim
+    nhead = args.nheads
+    num_encoder_layers = args.enc_layers
+    num_decoder_layers = args.dec_layers
+    dim_feedforward = args.dim_feedforward
+    dropout = args.dropout
+    activation = 'relu'
+    normalize_before = args.pre_norm
+    return_intermediate_dec = True
+
+    encoder_layer = TransformerEncoderLayer(d_model, nhead, dim_feedforward,
+                                            dropout, activation, normalize_before)
+    encoder_norm = nn.LayerNorm(d_model) if normalize_before else None
+    encoder = TransformerEncoder(encoder_layer, num_encoder_layers, encoder_norm)
+
+    decoder_layer = TransformerDecoderLayer(d_model, nhead, dim_feedforward,
+                                            dropout, activation, normalize_before)
+    decoder_norm = nn.LayerNorm(d_model)
+    decoder = TransformerDecoder(decoder_layer, num_decoder_layers, decoder_norm,
+                                 return_intermediate=return_intermediate_dec)
+
+    transformer = Transformer(
+        encoder,
+        decoder,
         d_model=args.hidden_dim,
-        dropout=args.dropout,
         nhead=args.nheads,
-        dim_feedforward=args.dim_feedforward,
-        num_encoder_layers=args.enc_layers,
-        num_decoder_layers=args.dec_layers,
-        normalize_before=args.pre_norm,
-        return_intermediate_dec=True,
     )
+
+    return transformer, encoder, decoder
 
 
 def _get_activation_fn(activation):
