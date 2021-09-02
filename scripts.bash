@@ -74,5 +74,9 @@ python visualizer.py --device cpu --dataset_file ant --data_path /Users/cabe0006
 
 
 
+#Local environment
+python main.py --device cpu --num_workers 0 --dataset_file ant2 --data_path /Users/cabe0006/Projects/monash/cvpr_data/detection_dataset/local_env/ --output_dir /Users/cabe0006/Projects/monash/detr_v1/checkpoints --resume /Users/cabe0006/Projects/monash/detr_v1/checkpoints/detr-r50-e632da11.pth
+
+
 
 
