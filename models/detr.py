@@ -244,7 +244,7 @@ class SetCriterion(nn.Module):
         # Compute all the requested losses
         losses = {}
         for loss in self.losses:
-            if train_dis is None or val_dis is None and loss == 'kl':
+            if (train_dis is None or val_dis is None) and loss == 'kl':
                 continue
             losses.update(self.get_loss(loss, outputs, targets, indices, num_boxes, train_dis, val_dis))
 
