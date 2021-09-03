@@ -94,7 +94,7 @@ def evaluate(model, criterion, postprocessors, data_loader, base_ds, device, out
         targets = [{k: v.to(device) for k, v in t.items()} for t in targets]
 
         outputs = model(samples)
-        loss_dict = criterion(outputs, targets)
+        loss_dict = criterion(outputs, targets, None, None)
         weight_dict = criterion.weight_dict
 
         # reduce losses over all GPUs for logging purposes
