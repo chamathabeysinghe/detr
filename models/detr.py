@@ -42,7 +42,7 @@ class DETR(nn.Module):
         self.backbone = backbone
         self.aux_loss = aux_loss
 
-    def forward(self, samples: NestedTensor, samples_val: NestedTensor):
+    def forward(self, samples: NestedTensor):
         """ The forward expects a NestedTensor, which consists of:
                - samples.tensor: batched images, of shape [batch_size x 3 x H x W]
                - samples.mask: a binary mask of shape [batch_size x H x W], containing 1 on padded pixels
@@ -60,22 +60,17 @@ class DETR(nn.Module):
         if isinstance(samples, (list, torch.Tensor)):
             samples = nested_tensor_from_tensor_list(samples)
         features, pos = self.backbone(samples)
-        with torch.no_grad():
-            features_val, pos_val = self.backbone(samples_val)
 
         src, mask = features[-1].decompose()
-        src_val, mask_val = features_val[-1].decompose()
         assert mask is not None
-        assert mask_val is not None
         hs, memory = self.transformer(self.input_proj(src), mask, self.query_embed.weight, pos[-1])
-        hs_val, memory_val = self.transformer(self.input_proj(src_val), mask_val, self.query_embed.weight, pos_val[-1])
 
         outputs_class = self.class_embed(hs)
         outputs_coord = self.bbox_embed(hs).sigmoid()
         out = {'pred_logits': outputs_class[-1], 'pred_boxes': outputs_coord[-1]}
         if self.aux_loss:
             out['aux_outputs'] = self._set_aux_loss(outputs_class, outputs_coord)
-        return out, memory, memory_val
+        return out, memory
 
     @torch.jit.unused
     def _set_aux_loss(self, outputs_class, outputs_coord):
