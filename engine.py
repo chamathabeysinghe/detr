@@ -15,7 +15,7 @@ from datasets.panoptic_eval import PanopticEvaluator
 
 
 def train_one_epoch(model: torch.nn.Module, criterion: torch.nn.Module,
-                    data_loader: Iterable, data_loader_val: Iterable, optimizer: torch.optim.Optimizer,
+                    data_loader: Iterable, data_loader_val_iter, optimizer: torch.optim.Optimizer,
                     device: torch.device, epoch: int, max_norm: float = 0):
     model.train()
     criterion.train()
@@ -27,7 +27,7 @@ def train_one_epoch(model: torch.nn.Module, criterion: torch.nn.Module,
 
     for samples, targets in metric_logger.log_every(data_loader, print_freq, header):
         samples = samples.to(device)
-        samples_val, targets_val = next(iter(data_loader_val))  # TODO pass only the iter
+        samples_val, targets_val = next(data_loader_val_iter)  # TODO pass only the iter
         samples_val = samples_val.to(device)
         targets = [{k: v.to(device) for k, v in t.items()} for t in targets]
 

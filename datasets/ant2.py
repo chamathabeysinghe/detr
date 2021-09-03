@@ -62,7 +62,7 @@ class AntDetection(torchvision.datasets.CocoDetection):
                     img, target = self._train_transforms_torch(img, target)
             return img, target
 
-        elif self.image_set == 'val':
+        elif self.image_set == 'val' or self.image_set == 'test':
             img, target = super(AntDetection, self).__getitem__(idx)
             image_id = self.ids[idx]
             target = {'image_id': image_id, 'annotations': target}
@@ -233,6 +233,7 @@ def build(image_set, args):
     PATHS = {
         "train": (root / "train", root / 'ground-truth-train.json'),
         "val": (root / "val", root / 'ground-truth-val.json'),
+        "test": (root / "test", root / 'ground-truth-test.json'),
     }
 
     img_folder, ann_file = PATHS[image_set]
