@@ -60,7 +60,8 @@ class DETR(nn.Module):
         if isinstance(samples, (list, torch.Tensor)):
             samples = nested_tensor_from_tensor_list(samples)
         features, pos = self.backbone(samples)
-        features_val, pos_val = self.backbone(samples_val)
+        with torch.no_grad():
+            features_val, pos_val = self.backbone(samples_val)
 
         src, mask = features[-1].decompose()
         src_val, mask_val = features_val[-1].decompose()
@@ -172,7 +173,7 @@ class SetCriterion(nn.Module):
         # https://sidml.github.io/Understanding-KL-Divergence/
         # https://discuss.pytorch.org/t/kullback-leibler-divergence-loss-function-giving-negative-values/763
         # return {"loss_kl": -0.00001 * F.kl_div(train_dis, val_dis.detach(), reduction="batchmean")}
-        return {"loss_kl": F.kl_div(F.log_softmax(train_dis), F.softmax(val_dis.detach()), reduction="batchmean")}
+        return {"loss_kl": F.kl_div(F.log_softmax(train_dis), F.softmax(val_dis), reduction="batchmean")}
 
     def loss_masks(self, outputs, targets, indices, num_boxes, train_dis=None, val_dis=None):
         """Compute the losses related to the masks: the focal loss and the dice loss.
