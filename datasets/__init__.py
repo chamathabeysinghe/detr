@@ -5,7 +5,7 @@ import torchvision
 from .coco import build as build_coco
 from .ant import build as build_ant
 from .ant2 import build as build_ant2
-
+from .ant_pair import build as build_ant_pair
 def get_coco_api_from_dataset(dataset):
     for _ in range(10):
         # if isinstance(dataset, torchvision.datasets.CocoDetection):
