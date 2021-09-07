@@ -166,8 +166,8 @@ class SetCriterion(nn.Module):
         # https://stackoverflow.com/questions/56816241/difference-between-detach-and-with-torch-nograd-in-pytorch
         # https://sidml.github.io/Understanding-KL-Divergence/
         # https://discuss.pytorch.org/t/kullback-leibler-divergence-loss-function-giving-negative-values/763
-        # return {"loss_kl": -0.00001 * F.kl_div(train_dis, val_dis.detach(), reduction="batchmean")}
-        return {"loss_kl": F.kl_div(F.log_softmax(train_dis), F.softmax(val_dis), reduction="batchmean")}
+        return {"loss_kl": F.mse_loss(train_dis, val_dis)}
+        # return {"loss_kl": F.kl_div(F.log_softmax(train_dis), F.softmax(val_dis), reduction="batchmean")}
 
     def loss_masks(self, outputs, targets, indices, num_boxes, train_dis=None, val_dis=None):
         """Compute the losses related to the masks: the focal loss and the dice loss.
